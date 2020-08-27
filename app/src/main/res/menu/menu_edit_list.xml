@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.EditListActivity"
+    android:layout_height="wrap_content"
+    android:layout_width="0dp">
+
+    <item
+        android:id="@+id/share"
+        android:title="@string/share_list"
+        android:icon="@drawable/share_button"
+        app:showAsAction="ifRoom"/>
+</menu>
