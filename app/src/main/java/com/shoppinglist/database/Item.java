@@ -1,15 +1,11 @@
 package com.shoppinglist.database;
 
+import androidx.annotation.NonNull;
+
 public class Item {
     private String name;
     private String quantity;
     private String otherInformation;
-
-    public Item(String name) {
-        this.name = name;
-        this.quantity = "1";
-        this.otherInformation = "";
-    }
 
     public String getName() {
         return this.name;
@@ -31,6 +27,7 @@ public class Item {
         this.otherInformation = newOtherInformation;
     }
 
+    @NonNull
     @Override
     public String toString() {
         String string = name;

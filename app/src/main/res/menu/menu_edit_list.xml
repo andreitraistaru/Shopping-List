@@ -2,13 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".activities.EditListActivity"
+    tools:context=".activities.editListActivity.EditListActivity"
     android:layout_height="wrap_content"
     android:layout_width="0dp">
 
     <item
+        android:id="@+id/add_item"
+        android:title="@string/add_item_list"
+        android:orderInCategory="100"
+        android:icon="@drawable/add_new_item_button"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/share"
         android:title="@string/share_list"
+        android:orderInCategory="200"
         android:icon="@drawable/share_button"
         app:showAsAction="ifRoom"/>
 </menu>

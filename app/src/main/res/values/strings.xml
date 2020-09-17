@@ -10,6 +10,7 @@
     <string name="save">Save</string>
 
     <string name="share_list">Share</string>
+    <string name="add_item_list">Add New Item</string>
     <string name="share_general">Here is your shopping list:\n\n</string>
 
     <string name="popup_delete">Delete</string>
@@ -20,7 +21,17 @@
     <string name="shop_field_shopping_list_item">Shop: %s</string>
     <string name="info_field_shopping_list_item">Info: %s</string>
 
+    <string name="quantity_field_edit_list_item">Quantity: %s</string>
+    <string name="info_field_edit_list_item">Info: %s</string>
+
     <string name="add_new_list">Add New List</string>
 
     <string name="no_list_name_error_new_list_activity">You did not enter the list\'s name!</string>
+
+    <string name="no_item_name_error_add_item_dialog">You did not enter the item\'s name!</string>
+
+    <string name="item_name_dialog_add_item">Item\'s name: (required)</string>
+    <string name="item_quantity_dialog_add_item">Quantity:</string>
+    <string name="item_info_dialog_add_item">Other info:</string>
+    <string name="save_info_dialog_add_item">Save</string>
 </resources>

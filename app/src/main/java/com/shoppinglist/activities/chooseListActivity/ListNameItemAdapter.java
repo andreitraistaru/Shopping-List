@@ -12,12 +12,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.shoppinglist.Constants;
 import com.shoppinglist.R;
-import com.shoppinglist.activities.EditListActivity;
+import com.shoppinglist.activities.editListActivity.EditListActivity;
 import com.shoppinglist.database.AppDatabase;
 import com.shoppinglist.database.ShoppingList;
 

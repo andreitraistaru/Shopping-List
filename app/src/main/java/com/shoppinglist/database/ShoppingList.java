@@ -17,10 +17,6 @@ public class ShoppingList {
     private String otherInfo;
     private ArrayList<Item> items;
 
-    public ShoppingList() {
-
-    }
-
     public int getId() {
         return id;
     }
@@ -58,6 +54,10 @@ public class ShoppingList {
     }
 
     public void addItem(Item newItem) {
+        if (items == null) {
+            items = new ArrayList<>();
+        }
+
         items.add(newItem);
     }
     public void removeItem(Item currentItem) {
