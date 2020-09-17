@@ -5,14 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.shoppinglist.R;
 import com.shoppinglist.database.AppDatabase;
-import com.shoppinglist.database.AppDatabaseClient;
-import com.shoppinglist.database.AppDatabaseEntity;
-import com.shoppinglist.shoppingLists.ShoppingList;
+import com.shoppinglist.database.ShoppingList;
 
 import java.util.List;
 
@@ -23,51 +22,31 @@ public class NewListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_list);
 
-        setTitle("New shopping list");
-
-        TextInputEditText textBox = findViewById(R.id.listName_newListActivity);
-
-        textBox.requestFocus();
+        setTitle(getString(R.string.activity_title_new_list_activity));
     }
 
     public void createNewList(View view) {
-        TextInputEditText listNameEditText = findViewById(R.id.listName_newListActivity);
-        String listName = (listNameEditText.getText() == null) ? "" : listNameEditText.getText().toString();
-        TextInputEditText shopNameEditText = findViewById(R.id.shopName_newListActivity);
-        String shopName = (shopNameEditText.getText() == null) ? "" : shopNameEditText.getText().toString();
-        TextInputEditText otherInformationEditText = findViewById(R.id.otherInformation_newListActivity);
-        String otherInformation = (otherInformationEditText.getText() == null) ? "" : otherInformationEditText.getText().toString();
+        String listName = ((TextView) findViewById(R.id.listName_newListActivity)).getText().toString();
+        String shopName = ((TextView) findViewById(R.id.shopName_newListActivity)).getText().toString();
+        String otherInfo = ((TextView) findViewById(R.id.otherInformation_newListActivity)).getText().toString();
 
         if (listName.isEmpty()) {
-            listNameEditText.setError("You did not enter the list's name!");
+            ((TextView) findViewById(R.id.listName_newListActivity)).setError(getString(R.string.no_list_name_error_new_list_activity));
         } else {
-            boolean validName = true;
-            AppDatabase database = AppDatabaseClient.getInstance(getApplicationContext()).getDatabase();
-            List<AppDatabaseEntity> lists = database.getAppDatabaseDao().getLists();
+            final ShoppingList newList = new ShoppingList();
 
-            for (AppDatabaseEntity list : lists) {
-                if (list.getShoppingList().getListName().equals(listName)) {
-                    listNameEditText.setError("List's name entered already used. Change it!");
-                    validName = false;
+            newList.setListName(listName);
+            newList.setShopName(shopName);
+            newList.setOtherInfo(otherInfo);
 
-                    break;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    AppDatabase.getInstance(getApplicationContext()).getAppDatabaseDao().insertItem(newList);
                 }
-            }
+            }).start();
 
-            if (validName) {
-                ShoppingList newList = new ShoppingList(listName);
-                newList.setShopName(shopName);
-                newList.setOtherInfo(otherInformation);
-
-                database.getAppDatabaseDao().insertItem(new AppDatabaseEntity(newList));
-                Toast.makeText(getApplicationContext(), "Shopping list created!", Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(this, EditListActivity.class);
-                intent.putExtra("listName", listName);
-
-                startActivity(intent);
-                finish();
-            }
+            finish();
         }
     }
 }

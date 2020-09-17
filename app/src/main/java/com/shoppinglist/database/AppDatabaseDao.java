@@ -1,25 +1,28 @@
 package com.shoppinglist.database;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
-
-import com.shoppinglist.shoppingLists.ShoppingList;
+import androidx.room.Update;
 
 import java.util.List;
 
 @Dao
 public interface AppDatabaseDao {
+    @Query("SELECT * FROM shoppingLists")
+    LiveData<List<ShoppingList>> getLists();
 
-    @Query("SELECT * FROM DatabaseLists")
-    List<AppDatabaseEntity> getLists();
+    @Query("SELECT * FROM shoppingLists WHERE id == :id")
+    LiveData<ShoppingList> getLists(int id);
 
     @Insert
-    void insertItem(AppDatabaseEntity newEntry);
+    void insertItem(ShoppingList shoppingList);
 
-    @Query("DELETE FROM DatabaseLists WHERE id = :id")
-    void deleteItem(final int id);
+    @Delete
+    void deleteItem(ShoppingList shoppingList);
 
-    @Query("UPDATE DatabaseLists SET shoppingList =:list WHERE id = :id")
-    void updateList(ShoppingList list, int id);
+    @Update
+    void updateList(ShoppingList list);
 }

@@ -2,13 +2,13 @@ package com.shoppinglist.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,29 +19,40 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.shoppinglist.Constants;
 import com.shoppinglist.R;
 import com.shoppinglist.database.AppDatabase;
-import com.shoppinglist.database.AppDatabaseClient;
-import com.shoppinglist.database.AppDatabaseEntity;
-import com.shoppinglist.shoppingLists.Item;
-import com.shoppinglist.shoppingLists.ShoppingList;
+import com.shoppinglist.database.Item;
+import com.shoppinglist.database.ShoppingList;
 
 import java.util.List;
 
 public class EditListActivity extends AppCompatActivity {
-
-    private ShoppingList list;
-    private int id;
-    private RecyclerView.Adapter adapter;
+    private ShoppingList shoppingList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_list);
 
         Intent intent = getIntent();
+        final int shoppingListId = intent.getIntExtra(Constants.selectedShoppingListBundleKey, -1);
 
-        setTitle("Shopping List: " + intent.getStringExtra("listName"));
+
+
+        AppDatabase.getInstance(getApplicationContext()).getAppDatabaseDao().getLists(shoppingListId).observe(this, new Observer<ShoppingList>() {
+            @Override
+            public void onChanged(ShoppingList data) {
+                shoppingList = data;
+
+
+
+                setTitle(shoppingList.getListName());
+            }
+        });
+
+
+        /*
 
         AppDatabase database = AppDatabaseClient.getInstance(getApplicationContext()).getDatabase();
         List<AppDatabaseEntity> lists = database.getAppDatabaseDao().getLists();
@@ -61,94 +72,11 @@ public class EditListActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
-    }
-
-    public class CardAdapter extends RecyclerView.Adapter<CardAdapter.ItemHolder>{
-        public class ItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnTouchListener {
-            private TextView nameItem;
-            private TextView quantityItem;
-
-            public ItemHolder(@NonNull View itemHolder) {
-                super(itemHolder);
-
-                nameItem = itemHolder.findViewById(R.id.nameItem);
-                nameItem.setOnClickListener(this);
-                nameItem.setOnTouchListener(this);
-
-                quantityItem = itemHolder.findViewById(R.id.quantityItem);
-                quantityItem.setOnClickListener(this);
-                quantityItem.setOnTouchListener(this);
-            }
-
-            public TextView getNameItem() {
-                return nameItem;
-            }
-
-            public TextView getQuantityItem() {
-                return quantityItem;
-            }
-
-            @Override
-            public void onClick(View v) {
-                TextInputEditText newItemName = findViewById(R.id.itemName_editListActivity);
-                String newItemNameString = (newItemName.getText() == null) ? "" : newItemName.getText().toString();
-                TextInputEditText newItemQuantity = findViewById(R.id.quantity_editListActivity);
-                String newItemQuantityString = (newItemQuantity.getText() == null) ? "" : newItemQuantity.getText().toString();
-                TextInputEditText newItemOtherInfo = findViewById(R.id.otherInformation_editListActivity);
-                String newItemOtherInfoString = (newItemOtherInfo.getText() == null) ? "" : newItemOtherInfo.getText().toString();
-
-                if (!newItemNameString.isEmpty() || !newItemQuantityString.isEmpty() || !newItemOtherInfoString.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), "Please add the current item or delete it before selecting from list!", Toast.LENGTH_SHORT).show();
-                } else {
-                    for (Item currentItem : list.getItems()) {
-                        if (currentItem.getName().equals(nameItem.getText().toString())) {
-                            newItemName.setText(currentItem.getName());
-                            newItemQuantity.setText(currentItem.getQuantity());
-                            newItemOtherInfo.setText(currentItem.getOtherInformation());
-
-                            break;
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    nameItem.setBackgroundColor(Color.CYAN);
-                    quantityItem.setBackgroundColor(Color.CYAN);
-                } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL){
-                    nameItem.setBackgroundColor(Color.TRANSPARENT);
-                    quantityItem.setBackgroundColor(Color.TRANSPARENT);
-                }
-
-                return false;
-            }
-        }
-
-        @NonNull
-        @Override
-        public ItemHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-
-            View itemView = inflater.inflate(R.layout.activity_edit_list_item_entry, parent, false);
-
-            return new ItemHolder(itemView);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull ItemHolder holder, int position) {
-            holder.getNameItem().setText(list.getItems().get(position).getName());
-            holder.getQuantityItem().setText(list.getItems().get(position).getQuantity());
-        }
-
-        @Override
-        public int getItemCount() {
-            return list.getItems().size();
-        }
+        */
     }
 
     public void addItem(View view) {
+        /*
         TextInputEditText newItemName = findViewById(R.id.itemName_editListActivity);
         String newItemNameString = (newItemName.getText() == null) ? "" : newItemName.getText().toString();
         TextInputEditText newItemQuantity = findViewById(R.id.quantity_editListActivity);
@@ -189,9 +117,11 @@ public class EditListActivity extends AppCompatActivity {
                 newItemOtherInfo.getText().clear();
             }
         }
+        */
     }
 
     public void removeItem(View view) {
+        /*
         TextInputEditText newItemName = findViewById(R.id.itemName_editListActivity);
         String newItemNameString = (newItemName.getText() == null) ? "" : newItemName.getText().toString();
         TextInputEditText newItemQuantity = findViewById(R.id.quantity_editListActivity);
@@ -225,6 +155,7 @@ public class EditListActivity extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "Item not found in the list! Don't modify the item after selecting it from list!", Toast.LENGTH_LONG).show();
         }
+         */
     }
 
     @Override
@@ -236,28 +167,16 @@ public class EditListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.share:
-                String message = new String(getResources().getString(R.string.share_general) + list.toString());
+        if (item.getItemId() == R.id.share) {
+            String message = getResources().getString(R.string.share_general) + shoppingList.toString();
 
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, message);
-                startActivity(intent);
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, message);
+            startActivity(intent);
 
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            return true;
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (list.isEmpty()) {
-            AppDatabase database = AppDatabaseClient.getInstance(getApplicationContext()).getDatabase();
-            database.getAppDatabaseDao().deleteItem(id);
-        }
-
-        super.onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 }

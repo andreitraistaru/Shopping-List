@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "db5e52ad01284cd96e04d5c5bb758afb",
+    "identityHash": "8a83a6e1e434ff0b6ccf5e409076cd51",
     "entities": [
       {
-        "tableName": "DatabaseLists",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `shoppingList` TEXT)",
+        "tableName": "shoppingLists",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `listName` TEXT, `shopName` TEXT, `otherInfo` TEXT, `items` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -15,8 +15,26 @@
             "notNull": true
           },
           {
-            "fieldPath": "shoppingList",
-            "columnName": "shoppingList",
+            "fieldPath": "listName",
+            "columnName": "listName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "shopName",
+            "columnName": "shopName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "otherInfo",
+            "columnName": "otherInfo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "items",
+            "columnName": "items",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -34,7 +52,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'db5e52ad01284cd96e04d5c5bb758afb')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8a83a6e1e434ff0b6ccf5e409076cd51')"
     ]
   }
 }
