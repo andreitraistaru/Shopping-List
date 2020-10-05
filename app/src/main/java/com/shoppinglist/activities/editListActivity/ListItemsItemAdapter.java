@@ -1,5 +1,7 @@
 package com.shoppinglist.activities.editListActivity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
@@ -14,9 +16,9 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.shoppinglist.R;
+import com.shoppinglist.database.AppDatabase;
 import com.shoppinglist.database.Item;
-
-import java.util.List;
+import com.shoppinglist.database.ShoppingList;
 
 public class ListItemsItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static class ListItemsItemViewHolder extends RecyclerView.ViewHolder {
@@ -49,7 +51,7 @@ public class ListItemsItemAdapter extends RecyclerView.Adapter<RecyclerView.View
         }
     }
 
-    private List<Item> items = null;
+    private ShoppingList shoppingList = null;
     private Context context;
 
     public ListItemsItemAdapter(Context context) {
@@ -64,7 +66,7 @@ public class ListItemsItemAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        final Item entry = items.get(position);
+        final Item entry = shoppingList.getItems().get(position);
 
         ((ListItemsItemViewHolder) holder).setItemName(entry.getName());
         ((ListItemsItemViewHolder) holder).setItemQuantity(context.getString(R.string.quantity_field_edit_list_item, entry.getQuantity().isEmpty() ? "-" : entry.getQuantity()));
@@ -73,16 +75,50 @@ public class ListItemsItemAdapter extends RecyclerView.Adapter<RecyclerView.View
         ((ListItemsItemViewHolder) holder).getCardView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context popupContext = new ContextThemeWrapper(context, R.style.popupMenu);
+                final Context popupContext = new ContextThemeWrapper(context, R.style.popupMenu);
                 PopupMenu popupMenu = new PopupMenu(popupContext, view);
                 popupMenu.getMenuInflater().inflate(R.menu.popup_edit_shopping_list, popupMenu.getMenu());
 
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        if (menuItem.getItemId() == R.id.delete_popup_edit_shopping_list_option) {
-                            items.remove(entry);
-                            notifyItemRemoved(position);
+                        switch (menuItem.getItemId()) {
+                            case R.id.delete_popup_edit_shopping_list_option:
+                                shoppingList.getItems().remove(entry);
+                                notifyItemRemoved(position);
+                                break;
+                            case R.id.edit_popup_edit_shopping_list_option:
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                ViewGroup viewGroup = ((Activity) context).findViewById(R.id.content);
+                                final View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_add_item, viewGroup, false);
+
+                                builder.setView(dialogView);
+                                final AlertDialog alertDialog = builder.create();
+
+                                ((TextView) dialogView.findViewById(R.id.name_dialog_add_item)).setText(entry.getName());
+                                ((TextView) dialogView.findViewById(R.id.quantity_dialog_add_item)).setText(entry.getQuantity());
+                                ((TextView) dialogView.findViewById(R.id.info_dialog_add_item)).setText(entry.getOtherInformation());
+                                dialogView.findViewById(R.id.save_dialog_add_item).setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        entry.setName(((TextView) alertDialog.findViewById(R.id.name_dialog_add_item)).getText().toString());
+                                        entry.setQuantity(((TextView) alertDialog.findViewById(R.id.quantity_dialog_add_item)).getText().toString());
+                                        entry.setOtherInformation(((TextView) alertDialog.findViewById(R.id.info_dialog_add_item)).getText().toString());
+
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                AppDatabase.getInstance(context).getAppDatabaseDao().updateList(shoppingList);
+                                            }
+                                        }).start();
+
+                                        alertDialog.dismiss();
+                                    }
+                                });
+
+                                alertDialog.show();
+
+                                break;
                         }
 
                         return true;
@@ -96,15 +132,15 @@ public class ListItemsItemAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     @Override
     public int getItemCount() {
-        if (items == null) {
+        if (shoppingList == null || shoppingList.getItems() == null) {
             return 0;
         }
 
-        return items.size();
+        return shoppingList.getItems().size();
     }
 
-    public void setItems(List<Item> items) {
-        this.items = items;
+    public void setShoppingList(ShoppingList shoppingList) {
+        this.shoppingList = shoppingList;
 
         notifyDataSetChanged();
     }

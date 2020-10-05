@@ -14,6 +14,7 @@
     <string name="share_general">Here is your shopping list:\n\n</string>
 
     <string name="popup_delete">Delete</string>
+    <string name="popup_edit">Edit</string>
 
     <string name="activity_title_choose_list_activity">Choose a list:</string>
     <string name="activity_title_new_list_activity">New List</string>

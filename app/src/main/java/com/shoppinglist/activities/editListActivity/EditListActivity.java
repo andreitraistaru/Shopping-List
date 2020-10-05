@@ -8,26 +8,19 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.shoppinglist.Constants;
 import com.shoppinglist.R;
 import com.shoppinglist.database.AppDatabase;
 import com.shoppinglist.database.Item;
 import com.shoppinglist.database.ShoppingList;
-
-import java.util.List;
 
 public class EditListActivity extends AppCompatActivity {
     private ShoppingList shoppingList;
@@ -51,7 +44,7 @@ public class EditListActivity extends AppCompatActivity {
             public void onChanged(ShoppingList data) {
                 shoppingList = data;
 
-                adapter.setItems(data.getItems());
+                adapter.setShoppingList(data);
 
                 setTitle(shoppingList.getListName());
             }
@@ -115,7 +108,7 @@ public class EditListActivity extends AppCompatActivity {
                             newItem.setOtherInformation(info);
 
                             shoppingList.addItem(newItem);
-                            adapter.setItems(shoppingList.getItems());
+                            adapter.setShoppingList(shoppingList);
 
                             alertDialog.dismiss();
                         }

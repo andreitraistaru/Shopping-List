@@ -6,4 +6,8 @@
     <item android:id="@+id/delete_popup_edit_shopping_list_option"
         android:title="@string/popup_delete"
         android:orderInCategory="100"/>
+
+    <item android:id="@+id/edit_popup_edit_shopping_list_option"
+        android:title="@string/popup_edit"
+        android:orderInCategory="200"/>
 </menu>
