@@ -85,7 +85,7 @@ public class ListItemsItemAdapter extends RecyclerView.Adapter<RecyclerView.View
                         switch (menuItem.getItemId()) {
                             case R.id.delete_popup_edit_shopping_list_option:
                                 shoppingList.getItems().remove(entry);
-                                notifyItemRemoved(position);
+                                notifyDataSetChanged();
                                 break;
                             case R.id.edit_popup_edit_shopping_list_option:
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
